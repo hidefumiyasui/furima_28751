@@ -17,8 +17,7 @@
 ### Association
 
 - has_many :items
-- has_many :deliveries
-- has_many :item_users
+- has_many :purchases
 
 
 ## items テーブル
@@ -39,9 +38,21 @@
 
 ### Association
 
-- has_one :deliveries
-- belongs_to :users
-- has_many :item_users
+- belongs_to :user
+- has_many :purchases
+
+## purchases テーブル
+
+| Column   | Type       | Options                        |
+| -------- | --------   | ------------                   |
+| user     | references | null: false, foreign_key: true |
+| item     | references | null: false, foreign_key: true |
+
+## Association
+
+- belongs_to :user
+- belongs_to :item
+- has_one :delivery
 
 ## deliveries テーブル
 
@@ -54,21 +65,8 @@
 | building_name   | string     |                   |
 | phone_number    | string     | null: false       |
 | user            | references | foreign_key: true |
-| item           | references | foreign_key: true |
+| item            | references | foreign_key: true |
 
 ### Association
 
-- belongs_to :users
-- belongs_to :items
-
-## item_users テーブル
-
-| Column   | Type       | Options                        |
-| -------- | --------   | ------------                   |
-| user     | references | null: false, foreign_key: true |
-| room     | references | null: false, foreign_key: true |
-
-## Association
-
-- belongs_to :users
-- belongs_to :items
+- belongs_to :purchase

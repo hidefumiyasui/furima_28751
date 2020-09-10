@@ -1,15 +1,13 @@
 class OrdersController < ApplicationController
   before_action :move_to_index
   before_action :move_to_root
+  before_action :set_order, only: [:index, :create]
+  before_action :set_item_order, only: [:index, :create]
 
   def index
-    @item = Item.find(params[:item_id])
   end
 
   def create
-    @item = Item.find(params[:item_id])
-    @order = ItemOrder.new(order_params)
-
     if @order.valid?
       @order.save
       pay_item
@@ -27,7 +25,6 @@ class OrdersController < ApplicationController
 
   def pay_item
     Payjp.api_key = ENV['PAYJP_SECRET_KEY']  # PAY.JPテスト秘密鍵
-    @order = Item.find(params[:item_id])
     Payjp::Charge.create(
       amount: @order.price, # 商品の値段
       card: order_params[:token], # カードトークン
@@ -42,5 +39,13 @@ class OrdersController < ApplicationController
   def move_to_root
     @item = Item.find(params[:item_id])
     redirect_to root_path if current_user.id == @item.user_id || !@item.order.nil?
+  end
+
+  def set_order
+    @item = Item.find(params[:item_id])
+  end
+
+  def set_item_order
+    @order = ItemOrder.new(order_params)
   end
 end

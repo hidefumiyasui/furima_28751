@@ -9,7 +9,6 @@ class OrdersController < ApplicationController
 
   def create
     if @order.valid?
-      binding.pry
       @order.save
       pay_item
       redirect_to root_path
